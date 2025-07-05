@@ -57,29 +57,26 @@ const fetchAPODImages = async (startDate, endDate) => {
         </div>
       `;
     } else {
+      // Use Bootstrap grid for responsive layout
+      galleryHTML = `<div class="row g-3">`;
       filteredData.forEach((entry, index) => {
-        if (entry.media_type === "image") {
-          galleryHTML += `
-            <div class="card mb-3" style="cursor:pointer;" data-index="${index}">
-              <img src="${entry.url}" class="card-img-top" alt="APOD">
+        galleryHTML += `
+          <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="card mb-3 hover-zoom" style="cursor:pointer;" data-index="${index}">
+              ${
+                entry.media_type === "image"
+                  ? `<img src="${entry.url}" class="card-img-top" alt="APOD">`
+                  : `<div class="ratio ratio-16x9"><iframe src="${entry.url}" title="APOD video"></iframe></div>`
+              }
               <div class="card-body">
                 <h5 class="card-title">${entry.title}</h5>
                 <p class="card-text">${entry.date}</p>
               </div>
             </div>
-          `;
-        } else if (entry.media_type === "video") {
-          galleryHTML += `
-            <div class="card mb-3" style="cursor:pointer;" data-index="${index}">
-              <div class="ratio ratio-16x9"><iframe src="${entry.url}" title="APOD video"></iframe></div>
-              <div class="card-body">
-                <h5 class="card-title">${entry.title}</h5>
-                <p class="card-text">${entry.date}</p>
-              </div>
-            </div>
-          `;
-        }
+          </div>
+        `;
       });
+      galleryHTML += `</div>`;
     }
     // Always clear loading message and show gallery or warning
     gallery.innerHTML = galleryHTML;
